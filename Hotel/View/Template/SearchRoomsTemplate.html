@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel</title>
+    {% import "macros.html" as macro %}
+</head>
+<body>
+    <div style="display: flex; flex-direction: row">
+        <div id="divMenu">
+            <p id="nameTable">
+                {{tableName}}
+            </p>
+            {{macro.renderCheckBoxes(entity, dictionary, clickSearch)}}
+        </div>
+
+        {% if clickSearch %}
+        <form action="/Room" method="GET" id="divMainContent">
+            {% for row in range(len(dataframe)) %}
+            <div class="divOutputData">
+                <ul>
+                    {% for columnName in dataframe.dtypes.index %}
+                    <li><b>{{columnName}}:</b> {{ dataframe.loc[row, columnName] }}</li>
+                    {% endfor %}
+                </ul>
+                {% if dataframe.loc[row, 'Статус'] != 'Занято' %}
+                <p id="roomButton"><input type="submit" name="{{dataframe.loc[row, 'Тип комнаты']}}" value="Выбрать"></p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </form>
+        {% endif %}
+    </div>
+</body>
+<link rel="stylesheet" href="{{url_for('static', filename='CSS/SearchRooms.css')}}">
+<script type="text/javascript" src="{{url_for('static', filename='JS/SearchRooms.js')}}"></script>
+</html>

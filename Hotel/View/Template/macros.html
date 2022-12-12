@@ -1,0 +1,32 @@
+{% macro renderCheckBoxes(entity, dictionary, clickSearch) %}
+    <form action="{{url_for('rooms')}}" method="GET" id="checkboxes">
+        <!-- Получаем названия колонок таблицы -->
+        {% for columnName in entity.dtypes.index %}
+            <!-- Если название колонки совпадает с ключом словаря, -->
+            {% if columnName in dictionary.keys() %}
+                <div>
+                    <label>{{columnName}}</label>
+                    <!-- то группируем значения колонки, -->
+                    {% set groupEntity = entity.groupby(columnName).aggregate({columnName: 'count'}) %}
+                    <ul>
+                        <!-- итерируемся по значениям этой колонки -->
+                    {% for value in groupEntity.index %}
+                        {% if clickSearch %}
+                            <!-- если одно из начений ключа совпадает со значением колонки, то ставим checkbox в состояние checked -->
+                            {% if value in dictionary[columnName] %}
+                                <li><label><input type="checkbox" name="{{columnName}}" value="{{value}}" checked></label> {{value}} </li>
+                            {% else %}
+                                <li><label><input type="checkbox" name="{{columnName}}" value="{{value}}"></label> {{value}} </li>
+                            {% endif %}
+                        {% else %}
+                            <li><label><input type="checkbox" name="{{columnName}}" value="{{value}}"></label> {{value}} </li>
+                        {% endif %}
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <input type=submit class="Button" id="searchButton" name="searchButton" value="Найти">
+        <input type=submit class="Button" id="clearButton" value="Очистить">
+    </form>
+{% endmacro %}

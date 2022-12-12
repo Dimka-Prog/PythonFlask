@@ -1,0 +1,1 @@
+//document.getElementById("divMainContent").style.width = String((document.body.offsetWidth - document.getElementById("divMenu").offsetWidth) - 70) + 'px'
